@@ -1,5 +1,6 @@
 package com.example.weblinkdemoapp.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,36 +12,57 @@ import com.example.weblinkdemoapp.model.InfoResult
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.min
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.minutes
 
 class LiveUpdateAdapter(private val datalist: List<InfoResult>) :  RecyclerView.Adapter<LiveUpdateAdapter.LiveUpdateViewHolder>() {
+
+    var count: Int = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LiveUpdateAdapter.LiveUpdateViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.live_update, parent, false)
 
+        Log.e("Live adapter", "onCreateViewHolder: called", )
         return LiveUpdateViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: LiveUpdateAdapter.LiveUpdateViewHolder, position: Int) {
 
-       val givenDateString = datalist.get(position).openOn
-        val sdf = SimpleDateFormat("HH:mm")
+        val timeFormat = "HH:mm"
+
+        val givenDateString = datalist.get(position).openOn
+        val sdf = SimpleDateFormat(timeFormat)
         val d1 = sdf.parse(givenDateString)
 
+        val h1 = d1.hours
+        val m1 = d1.minutes
 
-        val timeInMilliseconds = d1.time
+        val t1 = (h1 * 60) + m1
 
-        val timeStampValue = 1000 * 60 * 60 * 0.5
+        println("hours : $h1 minutes : $m1")
+        val timeStampValue = 30
 
-        println("given time :: ${timeStampValue/1000*60*60}")
+        val currentTime = Calendar.getInstance().time
+        val h2 = currentTime.hours
+        val m2 = currentTime.minutes
 
-        val currentTime = System.currentTimeMillis()
+        val t2 = (h2 * 60) + m2
 
-        val diff = currentTime - timeInMilliseconds
+        val diff = t2-t1
 
+        println(" current hours : $h2 minutes : $m2")
 
-
-        println("current time :: $diff")
+        println("difference $diff")
+        //val timeInMilliseconds = d1.time
+        if (diff > 0 ) {
+            if ( diff <= timeStampValue){
+                holder.market.text = datalist.get(position).name
+                holder.openTime.text = datalist.get(position).open
+                count++
+                println("count $count")
+            }
+        }
 
     }
 
