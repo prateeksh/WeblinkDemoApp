@@ -32,12 +32,15 @@ class LiveUpdateAdapter(private val datalist: List<InfoResult>) :  RecyclerView.
 
         val timeStampValue = 1000 * 60 * 60 * 0.5
 
-        println("given time :: $timeInMilliseconds")
+        println("given time :: ${timeStampValue/1000*60*60}")
 
         val currentTime = System.currentTimeMillis()
 
+        val diff = currentTime - timeInMilliseconds
 
-        println("current time :: $currentTime")
+
+
+        println("current time :: $diff")
 
     }
 
